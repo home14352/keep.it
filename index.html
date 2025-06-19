@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн блокнот | keep.it</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: repeating-linear-gradient(
+                135deg,
+                #E8DEF8 0px,
+                #E8DEF8 40px,
+                #F6F2FF 40px,
+                #F6F2FF 80px
+            );
+            font-family: Ubuntu, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .main-container {
+            margin-top: 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(177,139,255,0.10);
+            padding: 28px 20px 24px 20px;
+            width: 100%;
+            max-width: 540px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            position: relative;
+        }
+        .main-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .main-logo-row img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 2px 8px rgba(177,139,255,0.10));
+            opacity: 0.92;
+        }
+        .main-title {
+            font-size: 2rem;
+            font-family: 'Shantell Sans Medium', Ubuntu, sans-serif;
+            color: #B18BFF;
+            text-align: center;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .main-desc {
+            font-size: 1.1rem;
+            color: #6B4FA7;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .editor-label {
+            font-size: 1rem;
+            color: #6B4FA7;
+            margin-bottom: 8px;
+        }
+        .main-editor {
+            width: 100%;
+            min-height: 120px;
+            border-radius: 8px;
+            border: 1px solid #B18BFF;
+            padding: 10px 12px;
+            font-size: 1rem;
+            font-family: Ubuntu, Arial, sans-serif;
+            margin-bottom: 16px;
+            resize: vertical;
+            background: #F6F2FF;
+            box-sizing: border-box;
+        }
+        .main-btn-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .main-btn {
+            background: linear-gradient(90deg, #B18BFF 0%, #E8DEF8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 1rem;
+            font-family: Ubuntu, Arial, sans-serif;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(177,139,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+        }
+        .main-btn:hover, .main-btn:focus {
+            color: #fff;
+            background: linear-gradient(90deg, #A07BFF 0%, #D6C6F8 100%);
+            box-shadow: 0 4px 16px rgba(177,139,255,0.18);
+            text-decoration: none;
+        }
+        .main-output-label {
+            font-size: 1rem;
+            color: #6B4FA7;
+            margin-bottom: 6px;
+        }
+        .main-output {
+            word-break: break-all;
+            background: #F6F2FF;
+            transition: color 0.2s, box-shadow 0.2s, background 0.2s;
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-height: 48px;
+            font-size: 1rem;
+            color: #333;
+            font-family: Ubuntu, Arial, sans-serif;
+            border: 1px solid #B18BFF;
+            margin-bottom: 10px;
+        }
+        .main-link-row {
+            display: flex;
+            justify-content: center; /* Центрируем содержимое */
+            margin-top: 18px;
+            gap: 10px;
+        }
+        .main-link {
+            color: #fff;
+            background: linear-gradient(90deg, #B18BFF 0%, #E8DEF8 100%);
+            text-decoration: none;
+            font-size: 1rem;
+            font-family: Ubuntu, Arial, sans-serif;
+            transition: color 0.2s, box-shadow 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(177,139,255,0.15);
+            font-weight: 500;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 100%;           /* Растягиваем на всю ширину */
+            justify-content: center; /* Центрируем текст и иконку */
+            max-width: 100%;        /* Убираем ограничения по ширине */
+        }
+        .main-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0;
+            margin-bottom: 12px;
+        }
+        .main-logo-row .main-link {
+            margin-left: 16px;
+            margin-bottom: 0;
+            font-size: 0.98rem;
+            padding: 8px 16px;
+            box-shadow: 0 1px 4px rgba(177,139,255,0.10);
+        }
+        .main-link:hover, .main-link:focus {
+            color: #fff;
+            background: linear-gradient(90deg, #A07BFF 0%, #D6C6F8 100%);
+            box-shadow: 0 4px 16px rgba(177,139,255,0.18);
+            text-decoration: none;
+        }
+        .main-link i {
+            font-size: 1.15em;
+            margin-right: 4px;
+            filter: drop-shadow(0 1px 2px rgba(177,139,255,0.10));
+        }
+        .main-link:hover {
+            /* color: #6B4FA7; */ /* Удалено, чтобы текст не темнел */
+        }
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .toolbar-btn {
+            background: #F6F2FF;
+            border: 1px solid #B18BFF;
+            border-radius: 6px;
+            color: #6B4FA7;
+            font-size: 1.1em;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .toolbar-btn:hover, .toolbar-btn:focus {
+            color: #B18BFF;
+            background: linear-gradient(90deg, #E8DEF8 0%, #F6F2FF 100%);
+            box-shadow: 0 4px 16px rgba(177,139,255,0.13);
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            .main-container {
+                margin-top: 18px;
+                padding: 16px 4vw 16px 4vw;
+                max-width: 98vw;
+            }
+            .main-title {
+                font-size: 1.3rem;
+            }
+            .main-logo-row img {
+                height: 36px;
+            }
+            .main-output {
+                font-size: 0.97rem;
+                padding: 10px 6px;
+            }
+            .main-btn {
+                font-size: 0.97rem;
+                padding: 8px 0;
+            }
+            .main-editor {
+                font-size: 0.97rem;
+                min-height: 80px;
+                padding: 8px 8px;
+            }
+        }
+        .markdown-preview {
+            background: #F6F2FF;
+            border-radius: 8px;
+            border: 1px solid #B18BFF;
+            padding: 10px 12px;
+            min-height: 48px;
+            font-size: 1rem;
+            color: #333;
+            font-family: Ubuntu, Arial, sans-serif;
+            margin-bottom: 10px;
+            margin-top: 8px;
+        }
+        .info-btn {
+            background: none;
+            border: none;
+            color: #B18BFF;
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+            outline: none;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-btn:hover, .info-btn:focus {
+            color: #6B4FA7;
+            transform: scale(1.12) rotate(-8deg);
+        }
+        .info-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(177,139,255,0.13);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(.4,2,.6,1);
+        }
+        .info-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .info-modal-content {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(177,139,255,0.18);
+            padding: 32px 24px 24px 24px;
+            max-width: 420px;
+            width: 92vw;
+            animation: modalIn 0.45s cubic-bezier(.4,2,.6,1);
+            position: relative;
+        }
+        @keyframes modalIn {
+            from { transform: translateY(-40px) scale(0.95); opacity: 0; }
+            to   { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .info-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: none;
+            border: none;
+            color: #B18BFF;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .info-close:hover, .info-close:focus {
+            color: #6B4FA7;
+        }
+        .info-modal-content h2 {
+            margin-top: 0;
+            color: #B18BFF;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+        .info-modal-content ul {
+            color: #6B4FA7;
+            font-size: 1rem;
+            margin-bottom: 0.7em;
+        }
+        .info-modal-content li {
+            margin-bottom: 0.4em;
+        }
+        .credits {
+            color: #6B4FA7;
+            font-size: 0.98rem;
+            text-align: center;
+        }
+        .credits a {
+            color: #B18BFF;
+            text-decoration: underline;
+        }
+        .fancy-info-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 10;
+            background: linear-gradient(135deg, #E8DEF8 60%, #B18BFF 100%);
+            border-radius: 50%;
+            box-shadow: 0 2px 12px rgba(177,139,255,0.18), 0 0 0 0 #B18BFF;
+            padding: 0.18em 0.28em;
+            border: 2px solid #fff;
+            transition: 
+                color 0.2s, 
+                transform 0.2s, 
+                box-shadow 0.3s cubic-bezier(.4,2,.6,1),
+                background 0.3s;
+            font-size: 2.2rem;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fancy-info-btn:hover, .fancy-info-btn:focus {
+            color: #fff;
+            background: linear-gradient(135deg, #B18BFF 60%, #6B4FA7 100%);
+            transform: scale(1.18) rotate(-8deg);
+            box-shadow: 0 4px 24px 0 #B18BFF, 0 0 0 8px #E8DEF855;
+        }
+        @media (max-width: 600px) {
+            .fancy-info-btn {
+                top: 8px;
+                right: 8px;
+                font-size: 1.5rem;
+                padding: 0.12em 0.18em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <button id="infoBtn" class="fancy-info-btn" title="О проекте">
+            <i class="fa fa-info-circle"></i>
+        </button>
+        <div class="main-logo-row">
+            <img src="img/logo200x70.png" alt="keep.it logo">
+            <!-- <span class="main-title"><i class="fa fa-sticky-note"></i> keep.it</span> -->
+        </div>
+        <div class="main-desc">
+            Простой, быстрый и удобный способ хранить ваши заметки онлайн.
+        </div>
+        <label for="editor" class="editor-label">Ваша заметка:</label>
+        <div class="toolbar">
+            <button class="toolbar-btn" type="button" title="Жирный" onclick="formatMarkdown('bold')"><i class="fa fa-bold"></i></button>
+            <button class="toolbar-btn" type="button" title="Курсив" onclick="formatMarkdown('italic')"><i class="fa fa-italic"></i></button>
+            <button class="toolbar-btn" type="button" title="Подчёркнутый" onclick="formatMarkdown('underline')"><i class="fa fa-underline"></i></button>
+            <button class="toolbar-btn" type="button" title="Заголовок" onclick="formatMarkdown('heading')"><i class="fa fa-header"></i></button>
+            <button class="toolbar-btn" type="button" title="Ссылка" onclick="formatMarkdown('link')"><i class="fa fa-link"></i></button>
+            <button class="toolbar-btn" type="button" title="Код" onclick="formatMarkdown('code')"><i class="fa fa-code"></i></button>
+<!--            <button class="toolbar-btn" type="button" title="Список" onclick="formatMarkdown('list')"><i class="fa fa-list-ul"></i></button> -->
+        </div>
+        <textarea id="editor" class="main-editor" placeholder="Введите заметку..."></textarea>
+        <p class="editor-label">Предпросмотр Markdown:</p>
+        <div id="markdownPreview" class="markdown-preview"></div>
+        <div class="main-btn-row">
+            <button id="encodeBtn" class="main-btn"><i class="fa fa-magic"></i> Получить код</button>
+            <button id="clearBtn" class="main-btn"><i class="fa fa-eraser"></i> Очистить</button>
+        </div>
+        <div class="main-output-label">Код заметки:</div>
+        <div id="output" class="main-output"></div>
+        <div class="main-link-row">
+            <a href="view.html" class="main-link"><i class="fa fa-eye"></i> Просмотреть заметку</a>
+        </div>
+        <div id="infoModal" class="info-modal">
+            <div class="info-modal-content">
+                <button class="info-close" id="closeInfoBtn" title="Закрыть"><i class="fa fa-times"></i></button>
+                <h2>О приложении</h2>
+                <ul>
+                    <li><b>main-container</b> — основной контейнер, центрирует и стилизует содержимое.</li>
+                    <li><b>main-logo-row</b> — строка для логотипа/кнопки инфо.</li>
+                    <li><b>main-desc</b> — краткое описание сервиса.</li>
+                    <li><b>toolbar</b> — панель для форматирования Markdown (жирный, курсив и др.).</li>
+                    <li><b>main-editor</b> — поле для ввода заметки.</li>
+                    <li><b>markdown-preview</b> — предпросмотр заметки в формате Markdown.</li>
+                    <li><b>main-btn-row</b> — кнопки "Кодировать в base64" и "Очистить".</li>
+                    <li><b>main-output</b> — вывод закодированной строки base64.</li>
+                    <li><b>main-link-row/main-link</b> — кнопка для перехода к просмотру заметки.</li>
+                    <li><b>JS-функции</b>:
+                        <ul>
+                            <li><b>base64Encode</b> — кодирует текст в base64.</li>
+                            <li><b>updateOutput</b> — обновляет base64 и предпросмотр Markdown.</li>
+                            <li><b>formatMarkdown</b> — вставляет шаблоны Markdown в текст.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr>
+                <div class="credits">
+                    <b>Кредиты:</b><br>
+                    Автор: <a href="https://github.com/home14352" target="_blank">@home14352</a><br>
+                    Помощь: GPT-4.1 как GitHub Copilot
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        function base64Encode(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+        function updateOutput() {
+            var input = document.getElementById('editor').value;
+            var encoded = input ? base64Encode(input) : '';
+            document.getElementById('output').textContent = encoded;
+            updateMarkdownPreview();
+        }
+        function updateMarkdownPreview() {
+            var input = document.getElementById('editor').value;
+            var html = input ? marked.parse(input) : '';
+            document.getElementById('markdownPreview').innerHTML = html;
+        }
+        document.getElementById('encodeBtn').onclick = updateOutput;
+        document.getElementById('editor').addEventListener('input', updateOutput);
+        document.getElementById('clearBtn').onclick = function() {
+            document.getElementById('editor').value = '';
+            updateOutput();
+        };
+        function formatMarkdown(type) {
+            var textarea = document.getElementById('editor');
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+            var value = textarea.value;
+            var selected = value.substring(start, end);
+            var before = value.substring(0, start);
+            var after = value.substring(end);
+            var insert, newStart, newEnd;
+            switch(type) {
+                case 'bold':
+                    insert = `**${selected || 'жирный текст'}**`;
+                    newStart = start + 2;
+                    newEnd = newStart + (selected ? selected.length : 12);
+                    break;
+                case 'italic':
+                    insert = `*${selected || 'курсив'}*`;
+                    newStart = start + 1;
+                    newEnd = newStart + (selected ? selected.length : 6);
+                    break;
+                case 'underline':
+                    insert = `<u>${selected || 'подчёркнутый'}</u>`;
+                    newStart = start + 3;
+                    newEnd = newStart + (selected ? selected.length : 12);
+                    break;
+                case 'heading':
+                    insert = `# ${selected || 'Заголовок'}`;
+                    newStart = start + 2;
+                    newEnd = newStart + (selected ? selected.length : 9);
+                    break;
+                case 'link':
+                    insert = `[${selected || 'текст'}](https://)`;
+                    newStart = start + 1;
+                    newEnd = newStart + (selected ? selected.length : 4);
+                    break;
+                case 'code':
+                    insert = `\`${selected || 'код'}\``;
+                    newStart = start + 1;
+                    newEnd = newStart + (selected ? selected.length : 3);
+                    break;
+                case 'list':
+                    insert = `- ${selected || 'элемент списка'}`;
+                    newStart = start + 2;
+                    newEnd = newStart + (selected ? selected.length : 14);
+                    break;
+                default:
+                    return;
+            }
+            textarea.value = before + insert + after;
+            textarea.setSelectionRange(newStart, newEnd);
+            textarea.focus();
+            updateOutput();
+        }
+        updateOutput();
+
+        // Модальное окно инфо
+        const infoBtn = document.getElementById('infoBtn');
+        const infoModal = document.getElementById('infoModal');
+        const closeInfoBtn = document.getElementById('closeInfoBtn');
+        infoBtn.onclick = () => infoModal.classList.add('open');
+        closeInfoBtn.onclick = () => infoModal.classList.remove('open');
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Escape') infoModal.classList.remove('open');
+        });
+        infoModal.onclick = e => {
+            if (e.target === infoModal) infoModal.classList.remove('open');
+        }
+    </script>
+</body>
+</html>

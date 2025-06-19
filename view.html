@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр заметки | keep.it</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: repeating-linear-gradient(
+                135deg,
+                #E8DEF8 0px,
+                #E8DEF8 40px,
+                #F6F2FF 40px,
+                #F6F2FF 80px
+            );
+            font-family: Ubuntu, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .main-container {
+            margin-top: 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(177,139,255,0.10);
+            padding: 28px 20px 24px 20px;
+            width: 100%;
+            max-width: 540px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            position: relative;
+        }
+        .main-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .main-logo-row img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 2px 8px rgba(177,139,255,0.10));
+            opacity: 0.92;
+        }
+        .main-title {
+            font-size: 2rem;
+            font-family: 'Shantell Sans Medium', Ubuntu, sans-serif;
+            color: #B18BFF;
+            text-align: center;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .main-desc {
+            font-size: 1.1rem;
+            color: #6B4FA7;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .editor-label {
+            font-size: 1rem;
+            color: #6B4FA7;
+            margin-bottom: 8px;
+        }
+        .main-editor {
+            width: 100%;
+            min-height: 48px;
+            border-radius: 8px;
+            border: 1px solid #B18BFF;
+            padding: 10px 12px;
+            font-size: 1rem;
+            font-family: Ubuntu, Arial, sans-serif;
+            margin-bottom: 12px;
+            background: #F6F2FF;
+            box-sizing: border-box;
+        }
+        .main-btn-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .main-btn {
+            background: linear-gradient(90deg, #B18BFF 0%, #E8DEF8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 1rem;
+            font-family: Ubuntu, Arial, sans-serif;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(177,139,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+        }
+        .main-btn:hover, .main-btn:focus {
+            color: #fff;
+            background: linear-gradient(90deg, #A07BFF 0%, #D6C6F8 100%);
+            box-shadow: 0 4px 16px rgba(177,139,255,0.18);
+            text-decoration: none;
+        }
+        .main-output-label {
+            font-size: 1rem;
+            color: #6B4FA7;
+            margin-bottom: 6px;
+        }
+        .main-output {
+            word-break: break-all;
+            background: #F6F2FF;
+            transition: color 0.2s, box-shadow 0.2s, background 0.2s;
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-height: 48px;
+            font-size: 1rem;
+            color: #333;
+            font-family: Ubuntu, Arial, sans-serif;
+            border: 1px solid #B18BFF;
+            margin-bottom: 10px;
+        }
+        .markdown-preview {
+            background: #F6F2FF;
+            border-radius: 8px;
+            border: 1px solid #B18BFF;
+            padding: 10px 12px;
+            min-height: 48px;
+            font-size: 1rem;
+            color: #333;
+            font-family: Ubuntu, Arial, sans-serif;
+            margin-bottom: 10px;
+            margin-top: 8px;
+        }
+        .main-link-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 18px;
+            gap: 10px;
+        }
+        .main-link {
+            color: #fff;
+            background: linear-gradient(90deg, #B18BFF 0%, #E8DEF8 100%);
+            text-decoration: none;
+            font-size: 1rem;
+            font-family: Ubuntu, Arial, sans-serif;
+            transition: color 0.2s, box-shadow 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(177,139,255,0.15);
+            font-weight: 500;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            justify-content: center;
+            max-width: 100%;
+        }
+        .main-link:hover, .main-link:focus {
+            color: #fff;
+            background: linear-gradient(90deg, #A07BFF 0%, #D6C6F8 100%);
+            box-shadow: 0 4px 16px rgba(177,139,255,0.18);
+            text-decoration: none;
+        }
+        .main-link i {
+            font-size: 1.15em;
+            margin-right: 4px;
+            filter: drop-shadow(0 1px 2px rgba(177,139,255,0.10));
+        }
+        .info-btn {
+            background: none;
+            border: none;
+            color: #B18BFF;
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+            outline: none;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-btn:hover, .info-btn:focus {
+            color: #6B4FA7;
+            transform: scale(1.12) rotate(-8deg);
+        }
+        .info-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(177,139,255,0.13);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(.4,2,.6,1);
+        }
+        .info-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .info-modal-content {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(177,139,255,0.18);
+            padding: 32px 24px 24px 24px;
+            max-width: 420px;
+            width: 92vw;
+            animation: modalIn 0.45s cubic-bezier(.4,2,.6,1);
+            position: relative;
+        }
+        @keyframes modalIn {
+            from { transform: translateY(-40px) scale(0.95); opacity: 0; }
+            to   { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .info-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: none;
+            border: none;
+            color: #B18BFF;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .info-close:hover, .info-close:focus {
+            color: #6B4FA7;
+        }
+        .info-modal-content h2 {
+            margin-top: 0;
+            color: #B18BFF;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+        .info-modal-content ul {
+            color: #6B4FA7;
+            font-size: 1rem;
+            margin-bottom: 0.7em;
+        }
+        .info-modal-content li {
+            margin-bottom: 0.4em;
+        }
+        .credits {
+            color: #6B4FA7;
+            font-size: 0.98rem;
+            text-align: center;
+        }
+        .credits a {
+            color: #B18BFF;
+            text-decoration: underline;
+        }
+        .fancy-info-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 10;
+            background: linear-gradient(135deg, #E8DEF8 60%, #B18BFF 100%);
+            border-radius: 50%;
+            box-shadow: 0 2px 12px rgba(177,139,255,0.18), 0 0 0 0 #B18BFF;
+            padding: 0.18em 0.28em;
+            border: 2px solid #fff;
+            transition:
+                color 0.2s,
+                transform 0.2s,
+                box-shadow 0.3s cubic-bezier(.4,2,.6,1),
+                background 0.3s;
+            font-size: 2.2rem;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fancy-info-btn:hover, .fancy-info-btn:focus {
+            color: #fff;
+            background: linear-gradient(135deg, #B18BFF 60%, #6B4FA7 100%);
+            transform: scale(1.18) rotate(-8deg);
+            box-shadow: 0 4px 24px 0 #B18BFF, 0 0 0 8px #E8DEF855;
+        }
+        @media (max-width: 600px) {
+            .main-container {
+                margin-top: 18px;
+                padding: 16px 4vw 16px 4vw;
+                max-width: 98vw;
+            }
+            .main-title {
+                font-size: 1.3rem;
+            }
+            .main-logo-row img {
+                height: 36px;
+            }
+            .main-output {
+                font-size: 0.97rem;
+                padding: 10px 6px;
+            }
+            .main-btn {
+                font-size: 0.97rem;
+                padding: 8px 0;
+            }
+            .main-editor {
+                font-size: 0.97rem;
+                min-height: 36px;
+                padding: 8px 8px;
+            }
+            .fancy-info-btn {
+                top: 8px;
+                right: 8px;
+                font-size: 1.5rem;
+                padding: 0.12em 0.18em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <button id="infoBtn" class="fancy-info-btn" title="О проекте">
+            <i class="fa fa-info-circle"></i>
+        </button>
+        <div class="main-logo-row">
+            <img src="img/logo200x70.png" alt="keep.it logo">
+        </div>
+        <div class="main-desc">
+            Просмотр заметки по коду
+        </div>
+        <label for="base64input" class="editor-label">Введите код заметки (base64):</label>
+        <input id="base64input" class="main-editor" placeholder="Вставьте код..." autocomplete="off">
+        <div class="main-btn-row">
+            <button id="decodeBtn" class="main-btn"><i class="fa fa-eye"></i> Показать заметку</button>
+            <button id="clearBtn" class="main-btn"><i class="fa fa-eraser"></i> Очистить</button>
+        </div>
+        <div class="main-output-label">Расшифрованная заметка:</div>
+        <div id="output" class="main-output"></div>
+        <p class="main-output-label">Предпросмотр Markdown:</p>
+        <div id="markdownPreview" class="markdown-preview"></div>
+        <div class="main-link-row">
+            <a href="index.html" class="main-link"><i class="fa fa-pencil"></i> Создать новую заметку</a>
+        </div>
+        <div id="infoModal" class="info-modal">
+            <div class="info-modal-content">
+                <button class="info-close" id="closeInfoBtn" title="Закрыть"><i class="fa fa-times"></i></button>
+                <h2>О приложении</h2>
+                <ul>
+                    <li><b>main-container</b> — основной контейнер, центрирует и стилизует содержимое.</li>
+                    <li><b>main-logo-row</b> — строка для логотипа/кнопки инфо.</li>
+                    <li><b>main-desc</b> — описание страницы просмотра.</li>
+                    <li><b>main-editor</b> — поле для ввода base64-кода заметки.</li>
+                    <li><b>main-btn-row</b> — кнопки "Показать заметку" и "Очистить".</li>
+                    <li><b>main-output</b> — вывод расшифрованного текста заметки.</li>
+                    <li><b>markdown-preview</b> — предпросмотр заметки в формате Markdown.</li>
+                    <li><b>main-link-row/main-link</b> — кнопка для перехода к созданию новой заметки.</li>
+                    <li><b>JS-функции</b>:
+                        <ul>
+                            <li><b>base64Decode</b> — декодирует строку из base64.</li>
+                            <li><b>updateOutput</b> — обновляет расшифровку и предпросмотр Markdown.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr>
+                <div class="credits">
+                    <b>Кредиты:</b><br>
+                    Автор: <a href="https://github.com/home14352" target="_blank">@home14352</a><br>
+                    Помощь: GPT-4.1 как GitHub Copilot
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        function base64Decode(str) {
+            try {
+                return decodeURIComponent(escape(atob(str)));
+            } catch {
+                return '';
+            }
+        }
+        function updateOutput() {
+            var input = document.getElementById('base64input').value.trim();
+            var decoded = input ? base64Decode(input) : '';
+            document.getElementById('output').textContent = decoded;
+            var html = decoded ? marked.parse(decoded) : '';
+            document.getElementById('markdownPreview').innerHTML = html;
+        }
+        document.getElementById('decodeBtn').onclick = updateOutput;
+        document.getElementById('base64input').addEventListener('input', updateOutput);
+        document.getElementById('clearBtn').onclick = function() {
+            document.getElementById('base64input').value = '';
+            updateOutput();
+        };
+        updateOutput();
+
+        // Модальное окно инфо
+        const infoBtn = document.getElementById('infoBtn');
+        const infoModal = document.getElementById('infoModal');
+        const closeInfoBtn = document.getElementById('closeInfoBtn');
+        infoBtn.onclick = () => infoModal.classList.add('open');
+        closeInfoBtn.onclick = () => infoModal.classList.remove('open');
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Escape') infoModal.classList.remove('open');
+        });
+        infoModal.onclick = e => {
+            if (e.target === infoModal) infoModal.classList.remove('open');
+        }
+    </script>
+</body>
+</html>
