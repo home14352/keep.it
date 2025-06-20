@@ -336,7 +336,7 @@
         <label for="base64input" class="editor-label">Введите код заметки:</label>
         <input id="base64input" class="main-editor" placeholder="Вставьте код..." autocomplete="off">
         <div class="main-btn-row">
-            <button id="decodeBtn" class="main-btn"><i class="fa fa-eye"></i> Показать заметку</button>
+            <button id="decodeBtn" class="main-btn"><i class="fa fa-clipboard"></i> Скопировать заметку</button>
             <button id="clearBtn" class="main-btn"><i class="fa fa-eraser"></i> Очистить</button>
         </div>
         <div class="main-output-label">Расшифрованная заметка:</div>
@@ -395,7 +395,11 @@
             var html = decoded ? marked.parse(decoded) : '';
             document.getElementById('markdownPreview').innerHTML = html;
         }
-        document.getElementById('decodeBtn').onclick = updateOutput;
+        function copyToClipboard() {
+            const base64code = document.getElementById('output').textContent;
+            navigator.clipboard.writeText(base64code);
+        }
+        document.getElementById('decodeBtn').onclick = copyToClipboard;
         document.getElementById('base64input').addEventListener('input', updateOutput);
         document.getElementById('clearBtn').onclick = function() {
             document.getElementById('base64input').value = '';
