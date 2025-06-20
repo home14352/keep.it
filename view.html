@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Просмотр заметки | keep.it</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" sizes=60x66 href="favicon.ico" type="image/x-icon">
     <style>
         body {
             min-height: 100vh;
@@ -37,8 +38,8 @@
         }
         .main-logo-row {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: left;
+            justify-content: left;
             gap: 16px;
             margin-bottom: 12px;
         }
@@ -332,7 +333,7 @@
         <div class="main-desc">
             Просмотр заметки по коду
         </div>
-        <label for="base64input" class="editor-label">Введите код заметки (base64):</label>
+        <label for="base64input" class="editor-label">Введите код заметки:</label>
         <input id="base64input" class="main-editor" placeholder="Вставьте код..." autocomplete="off">
         <div class="main-btn-row">
             <button id="decodeBtn" class="main-btn"><i class="fa fa-eye"></i> Показать заметку</button>
@@ -364,12 +365,16 @@
                             <li><b>updateOutput</b> — обновляет расшифровку и предпросмотр Markdown.</li>
                         </ul>
                     </li>
+                    <li><b>Учтите, что сайт НЕ ХРАНИТ заметки, он просто кодирует и декодирует их используя base64</b></li>
                 </ul>
                 <hr>
                 <div class="credits">
                     <b>Кредиты:</b><br>
                     Автор: <a href="https://github.com/home14352" target="_blank">@home14352</a><br>
-                    Помощь: GPT-4.1 как GitHub Copilot
+                    Помощь: GPT-4.1 как GitHub Copilot<br>
+                    Иконки: <a href="https://fontawesome.com/" target="_blank">font-awesome</a><br>
+                    Отдельная благодарность создателю <a href="https://github.com/markedjs/marked" target="_blank">marked</a> за этот прекрасный инструмент<br>
+                    <p style="color: rgb(0, 0, 0, 0.5)">All rights reserved &#xA9; 2025</p>
                 </div>
             </div>
         </div>

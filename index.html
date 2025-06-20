@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Онлайн блокнот | keep.it</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" sizes=60x66 href="favicon.ico" type="image/x-icon">
     <style>
         body {
             min-height: 100vh;
@@ -94,7 +95,7 @@
             font-size: 1rem;
             font-family: Ubuntu, Arial, sans-serif;
             cursor: pointer;
-            transition: box-shadow 0.2s;
+            transition: box-shadow 0.5s;
             box-shadow: 0 2px 8px rgba(177,139,255,0.15);
             display: flex;
             align-items: center;
@@ -180,9 +181,9 @@
             margin-right: 4px;
             filter: drop-shadow(0 1px 2px rgba(177,139,255,0.10));
         }
-        .main-link:hover {
+/*        .main-link:hover {
             /* color: #6B4FA7; */ /* Удалено, чтобы текст не темнел */
-        }
+/*        } */
         .toolbar {
             display: flex;
             gap: 8px;
@@ -388,7 +389,7 @@
         <p class="editor-label">Предпросмотр Markdown:</p>
         <div id="markdownPreview" class="markdown-preview"></div>
         <div class="main-btn-row">
-            <button id="encodeBtn" class="main-btn"><i class="fa fa-magic"></i> Получить код</button>
+            <button id="encodeBtn" class="main-btn"><i class="fa fa-clipboard"></i> Скопировать код</button>
             <button id="clearBtn" class="main-btn"><i class="fa fa-eraser"></i> Очистить</button>
         </div>
         <div class="main-output-label">Код заметки:</div>
@@ -417,12 +418,16 @@
                             <li><b>formatMarkdown</b> — вставляет шаблоны Markdown в текст.</li>
                         </ul>
                     </li>
+                    <li><b>Учтите, что сайт НЕ ХРАНИТ заметки, он просто кодирует и декодирует их используя base64</b></li>
                 </ul>
                 <hr>
                 <div class="credits">
                     <b>Кредиты:</b><br>
                     Автор: <a href="https://github.com/home14352" target="_blank">@home14352</a><br>
-                    Помощь: GPT-4.1 как GitHub Copilot
+                    Помощь: GPT-4.1 как GitHub Copilot<br>
+                    Иконки: <a href="https://fontawesome.com/" target="_blank">font-awesome</a><br>
+                    Отдельная благодарность создателю <a href="https://github.com/markedjs/marked" target="_blank">marked</a> за этот прекрасный инструмент<br>
+                    <p style="color: rgb(0, 0, 0, 0.5)">Copyright &#xA9 2025 home14352</p>
                 </div>
             </div>
         </div>
@@ -438,12 +443,19 @@
             document.getElementById('output').textContent = encoded;
             updateMarkdownPreview();
         }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        function copyToClipboard() {
+            const base64code = document.getElementById('output').textContent;
+            navigator.clipboard.writeText(base64code);
+        }
         function updateMarkdownPreview() {
             var input = document.getElementById('editor').value;
             var html = input ? marked.parse(input) : '';
             document.getElementById('markdownPreview').innerHTML = html;
         }
-        document.getElementById('encodeBtn').onclick = updateOutput;
+        document.getElementById('encodeBtn').onclick = copyToClipboard;
         document.getElementById('editor').addEventListener('input', updateOutput);
         document.getElementById('clearBtn').onclick = function() {
             document.getElementById('editor').value = '';
